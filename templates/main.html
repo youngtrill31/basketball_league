@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+<br>
+<br>
+    <h1>Standings</h1>
+            <table >
+                <tbody>
+                    <tr>
+                        <td>Team</td>
+                        <td>Wins</td>
+                        <td>Losses</td>
+                    </tr>
+                    {% for team in standings %}
+                    <tr>
+                        <td>{{ team.team }}</td>
+                        <td>{{ team.wins }}</td>
+                        <td>{{ team.losses }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+{% endblock content %}
