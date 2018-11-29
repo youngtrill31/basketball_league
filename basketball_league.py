@@ -15,14 +15,14 @@ standings = [
     }
 ]
 
-@app.route("/")
-def main():
-    return render_template('main.html', standings=standings)
+@app.route("/home")
+def home():
+    return render_template('home.html', standings=standings, show_home=1)
 
 
 @app.route("/team_registration")
 def team_registration():
-    return render_template('team_registration.html')
+    return render_template('team_registration.html', show_home=0)
 
 
 @app.route("/admin")
