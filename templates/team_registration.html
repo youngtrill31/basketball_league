@@ -1,16 +1,40 @@
 {% extends "home.html" %}
 {% block content %}
+    <div class="content-section w-25">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group-sm">
+                <legend class ="border-bottom mb-4">Register your team!</legend>
+                <div class="form-group-sm">
+                    {{ form.team_name.label(class="form-control-sm") }}
+                    {{ form.team_name(class="form-control form-control-sm") }}
+                </div>
+                <div class="form-group-sm">
+                    {{ form.gm_name.label(class="form-control-sm") }}
+                    {{ form.gm_name(class="form-control form-control-sm") }}
+                </div>
+                <div class="form-group-sm">
+                    {{ form.gm_email.label(class="form-control-sm") }}
+                    {{ form.gm_email(class="form-control form-control-sm") }}
+                </div>
+                <div class="form-group-sm">
+                    {{ form.password.label(class="form-control-sm") }}
+                    {{ form.password(class="form-control form-control-sm") }}
+                </div>
+                <div class="form-group-sm">
+                    {{ form.confirm_password.label(class="form-control-sm") }}
+                    {{ form.confirm_password(class="form-control form-control-sm") }}
+                </div>
+                <div class="form-group-sm">
+                    {{ form.submit(class="btn btn-outline-info") }}
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="border-top pt-3 w-25">
+        <small class="text-muted">
+            Already have a team registered? <a class="ml-2" href="{{ url_for('team_login')}}">Sign In</a>
+        </small>
+    </div>
 
-
-
-<div class="row form-group m-b-10">
-    <label for="team-name">Team Name</label>
-    <input type="text" class="form-control" placeholder="Enter Team Name" name="team-name"/>
-    <label for="general-manager">General Manager Name</label>
-    <input type="text" class="form-control" placeholder="Enter General Manager Name" name="general-manager-name"/>
-    <label for="email">General Manager Email Address</label>
-    <input type="email" class="form-control" placeholder="Enter GM Email" name="email" />
-</div>
-
-
-{% endblock %}
+{% endblock content %}
