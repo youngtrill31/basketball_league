@@ -1,40 +1,68 @@
 {% extends "home.html" %}
 {% block content %}
-    <div class="content-section w-25">
+    <div class="content-section w-75">
         <form method="POST" action="">
             {{ form.hidden_tag() }}
-            <fieldset class="form-group-sm">
-                <legend class ="border-bottom mb-4">Register your team!</legend>
-                <div class="form-group-sm">
-                    {{ form.team_name.label(class="form-control-sm") }}
-                    {{ form.team_name(class="form-control form-control-sm") }}
+            <fieldset class="form-group">
+                <legend class ="border-bottom mb-7">Register your team!</legend>
+                <h5>General Info</h5>
+                <div class="form-group row">
+                    {{ form.team_name.label(class="col-sm-2 col-form-label col-form-label-sm") }}
+                    <div class="col-sm-10">
+                        {{ form.team_name(class="form-control form-control-sm") }}
+                    </div>
                 </div>
-                <div class="form-group-sm">
-                    {{ form.gm_name.label(class="form-control-sm") }}
-                    {{ form.gm_name(class="form-control form-control-sm") }}
+                <div class="form-group row">
+                    {{ form.gm_name.label(class="col-sm-2 col-form-label col-form-label-sm") }}
+                    <div class="col-sm-10">
+                        {{ form.gm_name(class="form-control form-control-sm") }}
+                    </div>
                 </div>
-                <div class="form-group-sm">
-                    {{ form.gm_email.label(class="form-control-sm") }}
-                    {{ form.gm_email(class="form-control form-control-sm") }}
+                <div class="form-group row">
+                    {{ form.gm_email.label(class="col-sm-2 col-form-label col-form-label-sm") }}
+                    <div class="col-sm-10">
+                        {{ form.gm_email(class="form-control form-control-sm") }}
+                    </div>
                 </div>
-                <div class="form-group-sm">
-                    {{ form.password.label(class="form-control-sm") }}
-                    {{ form.password(class="form-control form-control-sm") }}
+                <div class="form-group row">
+                    {{ form.password.label(class="col-sm-2 col-form-label col-form-label-sm") }}
+                    <div class="col-sm-10">
+                        {{ form.password(class="form-control form-control-sm") }}
+                    </div>
                 </div>
-                <div class="form-group-sm">
-                    {{ form.confirm_password.label(class="form-control-sm") }}
-                    {{ form.confirm_password(class="form-control form-control-sm") }}
+                <div class="form-group row">
+                    {{ form.confirm_password.label(class="col-sm-2 col-form-label col-form-label-sm") }}
+                    <div class="col-sm-10">
+                        {{ form.confirm_password(class="form-control form-control-sm") }}
+                    </div>
                 </div>
-                <div class="form-group-sm">
+
+                <div class="content-section w-50">
+                    <h5>Team Roster</h5>
+                    <table class="table" cellspacing="0">
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                        </tr>
+                        {% for player in form.players %}
+                            <tr>
+                                <td> {{ player.first_name }} </td>
+                                <td> {{ player.last_name }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="col-sm-10">
                     {{ form.submit(class="btn btn-outline-info") }}
                 </div>
             </fieldset>
+
         </form>
     </div>
-    <div class="border-top pt-3 w-25">
-        <small class="text-muted">
-            Already have a team registered? <a class="ml-2" href="{{ url_for('team_login')}}">Sign In</a>
-        </small>
-    </div>
+    <!--<div class="border-top pt-3 w-25">-->
+        <!--<small class="text-muted">-->
+            <!--Already have a team registered? <a class="ml-2" href="{{ url_for('team_login')}}">Sign In</a>-->
+        <!--</small>-->
+    <!--</div>-->
 
 {% endblock content %}
