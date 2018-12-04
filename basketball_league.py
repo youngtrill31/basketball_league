@@ -39,13 +39,14 @@ def team_registration():
     if form.validate_on_submit():
         team.add_user(form.gm_email.data, form.password.data)
         team.add_team(form.team_name.data, form.gm_name.data)
-        for players in form.players.data:
-            p.append(players)
-        # flash("Account created for %s" % p, 'success')
-        return p
-        # return redirect(url_for('team_registration_confirmation'))
+        # for player in form.players.data:
+        #     team.add_player(player['first_name'], player['last_name'])
+        #     # team.assign_player_to_team(player['first_name'], form.team_name.data)
+        flash("Account created for %s" % form.gm_email.data, 'success')
+        return redirect(url_for('team_registration_confirmation'))
     else:
-        return render_template('team_registration.html', show_home=0, title='Team Registration', form=form)
+        form.errors
+        # return render_template('team_registration.html', show_home=0, title='Team Registration', form=form)
 
 
 @app.route("/team_login")
@@ -66,8 +67,8 @@ def admin():
 
 @app.route('/add_players')
 def add_players():
-    roster = Rosters()
-    roster.add_players()
+    team = Team()
+    team.add_user('jdeleon@gmail.com', 'password')
     return 'Added!'
 
 
