@@ -4,8 +4,8 @@ import bcrypt
 
 app = Flask(__name__)
 
-#app.config['MONGO_URI'] = 'mongodb://jdeleon:gamebang08@ds123434.mlab.com:23434/jdleague'
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/jdleague'
+app.config['MONGO_URI'] = 'mongodb://jdeleon:gamebang08@ds123434.mlab.com:23434/jdleague'
+# app.config['MONGO_URI'] = 'mongodb://localhost:27017/jdleague'
 
 mongo = PyMongo(app)
 
@@ -34,6 +34,7 @@ class Team(object):
                 "team_name": team_name,
                 "general_manager": general_manager,
                 "players": [
+
                 ]
             }
         )
@@ -48,37 +49,24 @@ class Team(object):
         )
 
     def assign_player_to_team(self, first_name, last_name, team_name):
-        players = mongo.db.players
         teams = mongo.db.teams
 
-        player = players.find_one({ "$and": [
-            {"first_name": first_name},
-            {"last_name": last_name}] })
-        print str(player['_id'])
         teams.update(
             {"team_name": team_name},
             {"$push":
-                 {"players":{
-                     "$ref": "players",
-                     "$id": player["_id"],
-                     "$db": "jdleague"
-                 }}})
-
-    def update_team(self, team_name, object_id):
-        """
-        Locates team in mongo and adds players to team
-        :return:
-        """
-        teams = mongo.db.teams
-        team_name = teams.find_one({'team_name': team_name})
-        team_name['players'] = [
-            {
-                object_id
+                 {
+                     "players": {
+                         "first_name": first_name,
+                         "last_name": last_name
+                     }
+                 }
             }
-        ]
+        )
+
+
 
 if __name__ == '__main__':
     from team import Team
 
     team = Team()
-    team.assign_player_to_team('blake', 'griffin', 'Clipset')
+    team.assign_player_to_team('rob', 'de leon', 'black panther')
