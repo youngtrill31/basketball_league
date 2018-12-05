@@ -35,18 +35,17 @@ def home():
 def team_registration():
     form = TeamRegistration()
     team = Team()
-    p = []
     if form.validate_on_submit():
         team.add_user(form.gm_email.data, form.password.data)
         team.add_team(form.team_name.data, form.gm_name.data)
-        # for player in form.players.data:
-        #     team.add_player(player['first_name'], player['last_name'])
-        #     # team.assign_player_to_team(player['first_name'], form.team_name.data)
+        for player in form.players.data:
+            team.add_player(player['first_name'], player['last_name'])
+            team.assign_player_to_team(player['first_name'], player['last_name'], form.team_name.data)
         flash("Account created for %s" % form.gm_email.data, 'success')
         return redirect(url_for('team_registration_confirmation'))
     else:
-        form.errors
-        # return render_template('team_registration.html', show_home=0, title='Team Registration', form=form)
+        # return form.errors
+        return render_template('team_registration.html', show_home=0, title='Team Registration', form=form)
 
 
 @app.route("/team_login")

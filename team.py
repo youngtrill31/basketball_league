@@ -34,7 +34,6 @@ class Team(object):
                 "team_name": team_name,
                 "general_manager": general_manager,
                 "players": [
-
                 ]
             }
         )
@@ -48,12 +47,22 @@ class Team(object):
             }
         )
 
-    # def assign_player_to_team(self, first_name, team_name):
-    #     players = mongo.db.players
-    #     teams = mongo.db.teams
-    #     for player in players.find_one({ "first_name": first_name }):
-    #         team = teams.find_one({ "team_name": team_name })
-    #         team["players"].append(player.get('_id'))
+    def assign_player_to_team(self, first_name, last_name, team_name):
+        players = mongo.db.players
+        teams = mongo.db.teams
+
+        player = players.find_one({ "$and": [
+            {"first_name": first_name},
+            {"last_name": last_name}] })
+        print str(player['_id'])
+        teams.update(
+            {"team_name": team_name},
+            {"$push":
+                 {"players":{
+                     "$ref": "players",
+                     "$id": player["_id"],
+                     "$db": "jdleague"
+                 }}})
 
     def update_team(self, team_name, object_id):
         """
@@ -67,3 +76,9 @@ class Team(object):
                 object_id
             }
         ]
+
+if __name__ == '__main__':
+    from team import Team
+
+    team = Team()
+    team.assign_player_to_team('blake', 'griffin', 'Clipset')
