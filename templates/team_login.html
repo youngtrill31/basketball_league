@@ -1,7 +1,7 @@
 {% extends "home.html" %}
 {% block content %}
     <div class="content-section w-25">
-        <form method="POST" action="">
+        <form method="POST" action="{{ url_for('gm_login') }}">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 <legend class ="border-bottom mb-7">Team Login</legend>

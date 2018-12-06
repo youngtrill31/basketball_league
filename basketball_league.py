@@ -1,6 +1,7 @@
 from __future__ import print_function
 from flask import Flask, render_template, url_for, flash, redirect, session
 from flask_pymongo import PyMongo
+from flask_login import logout_user, login_manager
 from team_registration import TeamRegistration
 from team_login import TeamLogin
 from team import Team
@@ -31,16 +32,17 @@ def home():
 
 @app.route("/team_registration", methods=["GET", "POST"])
 def team_registration():
+    if "gm_email" in session:
+        return "You already have a team registered!"
     form = TeamRegistration()
     team = Team()
     if form.validate_on_submit():
-        team.add_user(form.gm_email.data, form.password.data)
+        team.add_user(form.gm_email.data, form.password.data, form.gm_name.data)
         team.add_team(form.team_name.data, form.gm_name.data)
         for player in form.players.data:
             team.add_player(player['first_name'], player['last_name'])
             team.assign_player_to_team(player['first_name'], player['last_name'], form.team_name.data)
-        session['gm_email'] = form.gm_email.data
-        flash("Account created for %s" % session['gm_email'], 'success')
+        flash("Account created for %s" %  form.gm_email.data, 'success')
         return redirect(url_for('team_registration_confirmation'))
     else:
         # return form.errors
@@ -60,13 +62,40 @@ def team_page(team_id):
 
     return render_template('team_information.html', title='Teams', team_info_list=team_data)
 
-@app.route("/team_login", methods=['POST'])
+@app.route("/team_login")
 def team_login():
-    form = TeamLogin()
+    login_form = TeamLogin()
 
-    # if 'gm_email' in session:
-    #     return 'you are logged in as ' + session['gm_email']
-    return render_template('team_login.html', show_home=0, title='Team Login', form=form)
+    return render_template('team_login.html', title='Teams', form=login_form)
+
+@app.route("/gm_login", methods=['POST'])
+def gm_login():
+    login_form = TeamLogin()
+    team = Team()
+
+    gm_email = team.get_gm_login(login_form.gm_email.data, login_form.password.data)
+
+    session["gm_email"] = gm_email
+    return redirect(url_for("gm_home"))
+
+@app.route("/gm_home")
+def gm_home():
+    if "gm_email" in session:
+        return render_template("gm_home.html", gm_email=session["gm_email"])
+
+    login_form = TeamLogin()
+
+    return render_template("team_login.html", form=login_form)
+
+@app.route("/roster_management")
+def roster_management():
+    if "gm_email" in session:
+        return render_template("roster_management.html")
+
+@app.route("/logout")
+def logout():
+    session.pop("gm_email")
+    return redirect(url_for("home"))
 
 @app.route("/team_registration_confirmation")
 def team_registration_confirmation():
