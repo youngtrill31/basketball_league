@@ -1,0 +1,11 @@
+{% extends "home.html" %}
+{% block content %}
+    <table class="table table-hover">
+        <th>Teams</th>
+        {% for team in team_list %}
+        <tr>
+            <td><a href="{{ url_for('team_page', team_id=team[1]) }}">{{ team[0] }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock content %}

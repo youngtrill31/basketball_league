@@ -1,0 +1,16 @@
+{% extends "home.html" %}
+{% block content %}
+<h4>Team Roster</h4>
+    <table class="table table-hover">
+        <th>First Name</th>
+        <th>Last Name</th>
+        {% for team in team_info_list %}
+            {% for p in team.players %}
+        <tr>
+            <td>{{ p.first_name }}</td>
+            <td>{{ p.last_name }}</td>
+        </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+{% endblock content %}
