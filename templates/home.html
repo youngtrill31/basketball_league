@@ -50,6 +50,9 @@
     <div class="collapse navbar-collapse" id="header-navbar">
       <ul class="nav navbar-nav navbar-right">
         <li><a href="{{ url_for('home')}}">HOME</a></li>
+        {% if session['gm_email'] %}
+        <li><a href="{{ url_for('gm_home')}}">GM HOME</a></li>
+        {% endif %}
         {% if not session['gm_email'] %}
         <li><a href="{{ url_for('team_registration')}}">TEAM REGISTRATION</a></li>
         {% endif %}

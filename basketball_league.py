@@ -1,8 +1,8 @@
 from __future__ import print_function
 from flask import Flask, render_template, url_for, flash, redirect, session
 from flask_pymongo import PyMongo
-from flask_login import logout_user, login_manager
 from team_registration import TeamRegistration
+from team_roster import TeamRoster
 from team_login import TeamLogin
 from team import Team
 app = Flask(__name__)
@@ -71,17 +71,17 @@ def team_login():
 @app.route("/gm_login", methods=['POST'])
 def gm_login():
     login_form = TeamLogin()
-    team = Team()
 
-    gm_email = team.get_gm_login(login_form.gm_email.data, login_form.password.data)
-
-    session["gm_email"] = gm_email
+    session["gm_email"] = login_form.gm_email.data
     return redirect(url_for("gm_home"))
 
 @app.route("/gm_home")
 def gm_home():
+    team = Team()
+    team_data = team.get_team_data_by_gm_email(session["gm_email"])
+
     if "gm_email" in session:
-        return render_template("gm_home.html", gm_email=session["gm_email"])
+        return render_template("gm/gm_home.html", gm_email=session["gm_email"], team_data=team_data)
 
     login_form = TeamLogin()
 
@@ -89,8 +89,17 @@ def gm_home():
 
 @app.route("/roster_management")
 def roster_management():
+    team = Team()
+    team_data = team.get_team_data_by_gm_email(session["gm_email"])
+
+    team_roster = TeamRoster()
+
     if "gm_email" in session:
-        return render_template("roster_management.html")
+        return render_template("gm/roster_management.html", team_data=team_data, form=team_roster)
+
+@app.route("/add_player")
+def add_player_to_existing_roster():
+    pass
 
 @app.route("/logout")
 def logout():
@@ -108,10 +117,4 @@ def admin():
 @app.route("/admin/team/<team_id>")
 def admin_team(team_id):
     return "this is the admin team page"
-
-@app.route('/add_players')
-def add_players():
-    team = Team()
-    team.add_user('jdeleon@gmail.com', 'password')
-    return 'Added!'
 

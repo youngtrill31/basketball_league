@@ -4,8 +4,8 @@ import bcrypt
 
 app = Flask(__name__)
 
-app.config['MONGO_URI'] = 'mongodb://jdeleon:gamebang08@ds123434.mlab.com:23434/jdleague'
-# app.config['MONGO_URI'] = 'mongodb://localhost:27017/jdleague'
+# app.config['MONGO_URI'] = 'mongodb://jdeleon:gamebang08@ds123434.mlab.com:23434/jdleague'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/jdleague'
 
 mongo = PyMongo(app)
 
@@ -99,6 +99,15 @@ class Team(object):
 
         return team_data
 
+    def get_team_data_by_gm_email(self, gm_email):
+        team = mongo.db.teams
+        cursor = team.find({"general_manager.email": gm_email})
+        team_data = []
+
+        for doc in cursor:
+            team_data.append(doc)
+
+        return team_data
 
 
 if __name__ == '__main__':
@@ -113,5 +122,5 @@ if __name__ == '__main__':
 
 
 
-    a = team.get_gm_login("mike@gmail.com", "test")
+    a = team.get_team_data_by_gm_email("aj@aol.com")
     print a

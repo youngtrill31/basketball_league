@@ -1,0 +1,8 @@
+{% extends "home.html" %}
+{% block content %}
+
+    {$ for team in team_data %}
+    <h4>Welcome, {{ team.general_manager }}!</h4>
+    {% endfor %}
+
+{% endblock content %}
