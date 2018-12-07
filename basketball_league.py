@@ -2,9 +2,10 @@ from __future__ import print_function
 from flask import Flask, render_template, url_for, flash, redirect, session
 from flask_pymongo import PyMongo
 from team_registration import TeamRegistration
-from team_roster import TeamRoster
+from team_roster import TeamRoster, RosterManagementForm
 from team_login import TeamLogin
 from team import Team
+import logging
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'R0HU997LNU9HKE48'
@@ -34,8 +35,10 @@ def home():
 def team_registration():
     if "gm_email" in session:
         return "You already have a team registered!"
+
     form = TeamRegistration()
     team = Team()
+
     if form.validate_on_submit():
         team.add_user(form.gm_email.data, form.password.data, form.gm_name.data)
         team.add_team(form.team_name.data, form.gm_name.data)
@@ -87,15 +90,22 @@ def gm_home():
 
     return render_template("team_login.html", form=login_form)
 
-@app.route("/roster_management")
+@app.route("/roster_management", methods=["GET", "POST"])
 def roster_management():
     team = Team()
     team_data = team.get_team_data_by_gm_email(session["gm_email"])
 
-    team_roster = TeamRoster()
 
+
+    roster_form = RosterManagementForm()
     if "gm_email" in session:
-        return render_template("gm/roster_management.html", team_data=team_data, form=team_roster)
+        if roster_form.validate_on_submit():
+            for player in roster_form.players.data:
+                for td in team_data:
+                    team.add_player(player['first_name'], player['last_name'])
+                    team.assign_player_to_team(player['first_name'], player['last_name'], td['team_name'])
+            return redirect(url_for('roster_management'))
+    return render_template("gm/roster_management.html", team_data=team_data, form=roster_form)
 
 @app.route("/add_player")
 def add_player_to_existing_roster():

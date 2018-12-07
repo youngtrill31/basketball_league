@@ -3,7 +3,8 @@
 <h3>Roster Management</h3>
 <div>Manage your team's roster. Add, remove, or edit player information.
     This information will be used for game logs.</div>
-    <table class="table table-hover" id="roster">
+          <form method="POST" action="" novalidate>
+    <table class="table table-hover" id="roster_management">
         <th>First Name</th>
         <th>Last Name</th>
         <th>Action</th>
@@ -17,14 +18,16 @@
         </tr>
             {% endfor %}
         {% endfor %}
-        <tr>
+        <tr class="hidden">
             <td>{{ form.first_name(class="form-control form-control-sm") }}</td>
             <td>{{ form.last_name(class="form-control form-control-sm") }}</td>
-            <td><button type="button" class="btn btn-lime">Save</button></td>
+            <td>{{ form.save_button(class="btn btn-outline-info") }}</td>
         </tr>
     </table>
+          </form>
 <form action="/add_player">
-    <button type="button" class="btn btn-primary btn-xs">Add Player</button>
+    <button type="button" class="btn btn-primary btn-xs">
+        <a href="#" id="insert-more" class="btn btn-primary btn-xs">Add Player</a></button>
 </form>
 
 {% endblock content %}
