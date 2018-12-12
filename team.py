@@ -122,5 +122,4 @@ if __name__ == '__main__':
 
 
 
-    a = team.get_team_data_by_gm_email("aj@aol.com")
-    print a
+    a = team.add_player("BOO", "YAH")

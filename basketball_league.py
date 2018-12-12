@@ -94,22 +94,21 @@ def gm_home():
 def roster_management():
     team = Team()
     team_data = team.get_team_data_by_gm_email(session["gm_email"])
-
-
-
     roster_form = RosterManagementForm()
-    if "gm_email" in session:
-        if roster_form.validate_on_submit():
-            for player in roster_form.players.data:
-                for td in team_data:
-                    team.add_player(player['first_name'], player['last_name'])
-                    team.assign_player_to_team(player['first_name'], player['last_name'], td['team_name'])
-            return redirect(url_for('roster_management'))
-    return render_template("gm/roster_management.html", team_data=team_data, form=roster_form)
 
-@app.route("/add_player")
-def add_player_to_existing_roster():
-    pass
+    if "gm_email" in session:
+        app.logger.debug("NAME: %s" % roster_form.last_name.data)
+        if roster_form.validate_on_submit():
+            team.add_player(roster_form.first_name.data, roster_form.last_name.data)
+            for t in team_data:
+                team.assign_player_to_team(roster_form.first_name.data, roster_form.last_name.data, t["team_name"])
+            app.logger.debug("ADDED!")
+            return redirect(url_for('roster_management'))
+        else:
+            app.logger.debug("NOT ADDED: name: %s" % roster_form.first_name)
+            return render_template("gm/roster_management.html", team_data=team_data, form=roster_form)
+
+
 
 @app.route("/logout")
 def logout():
