@@ -11,7 +11,7 @@
         <th>Action</th>
         {% for team in team_data %}
             {% for p in team.players %}
-        <tr>
+        <tr id={{ p._id }}>
             <td>{{ p.first_name }}</td>
             <td>{{ p.last_name }}</td>
             <td><button type="button" class="btn btn-primary btn-xs">Edit</button>
