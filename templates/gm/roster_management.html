@@ -1,6 +1,8 @@
 {% extends "home.html" %}
 {% block content %}
-<h3>Roster Management</h3>
+{% for team in team_data %}
+<h3>Roster Management - {{ team.team_name }}</h3>
+{% endfor %}
 <div>Manage your team's roster. Add, remove, or edit player information.
     This information will be used for game logs.</div>
 <form method="POST" action="" novalidate>
@@ -11,22 +13,22 @@
         <th>Action</th>
         {% for team in team_data %}
             {% for p in team.players %}
-        <tr id={{ p._id }}>
+        <tr>
             <td>{{ p.first_name }}</td>
             <td>{{ p.last_name }}</td>
-            <td><button type="button" class="btn btn-primary btn-xs">Edit</button>
-                <button type="button" class="btn btn-danger">Delete</button></td>
+            <td><a href="#" id="edit-player" data-id={{ p._id }} type="button" class="btn btn-primary btn-xs">Edit</a>
+                <a href="#" id="remove-player" data-id={{ p._id }} type="button" class="btn btn-primary btn-xs">Remove</a></td>
         </tr>
             {% endfor %}
         {% endfor %}
-        <tr class="hiddenRow" id="playerRow">
+        <tr>
             <td>{{ form.first_name(class="form-control form-control-sm") }}</td>
             <td>{{ form.last_name(class="form-control form-control-sm") }}</td>
-            <td>{{ form.save_button(class="btn btn-outline-info") }}</td>
+            <td>{{ form.add_button(class="btn btn-outline-info") }}</td>
         </tr>
     </table>
 </form>
     <!--<button type="button" class="btn btn-primary btn-xs" id="addPlayer">-->
         <!--<a href="#" id="insert-more" class="btn btn-primary btn-xs">Add Player</a></button>-->
-
+<button data-id="testdata" id="test" class="btn btn-primary btn-xs">TEST</button>
 {% endblock content %}

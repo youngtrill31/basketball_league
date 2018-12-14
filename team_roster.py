@@ -12,4 +12,6 @@ class TeamRoster(NoCsrfForm):
 class RosterManagementForm(FlaskForm):
     first_name = StringField("First Name", validators=[DataRequired()])
     last_name = StringField("Last Name", validators=[DataRequired()])
-    save_button = SubmitField("Save")
+    add_button = SubmitField("Add")
+    edit_button = SubmitField("Edit")
+    remove_button = SubmitField("Remove")

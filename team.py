@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_pymongo import PyMongo
+from bson.objectid import ObjectId
 import bcrypt
 
 app = Flask(__name__)
@@ -63,9 +64,15 @@ class Team(object):
             }
         )
 
-    def get_player(self, first_name, last_name):
+    def get_player_by_name(self, first_name, last_name):
         players = mongo.db.players
         player = players.find_one({"first_name": first_name, "last_name": last_name})
+
+        return player
+
+    def get_player_by_id(self, _id):
+        players = mongo.db.players
+        player = players.find_one({"_id": ObjectId(_id)})
 
         return player
 
@@ -77,6 +84,16 @@ class Team(object):
         teams.update_one(
             {   "team_name": team_name  },
             {   "$push": {  "players": player}})
+
+
+    def remove_player_from_team_by_id(self, _id, team_name):
+        teams = mongo.db.teams
+        teams.update_one(
+            {   "team_name": team_name},
+            {   "$pull": {  "players": {
+                "_id": ObjectId(_id)
+            }}}
+        )
 
     def get_teams(self):
         """
@@ -122,4 +139,4 @@ if __name__ == '__main__':
 
 
 
-    a = team.add_player("BOO", "YAH")
+    team.remove_player_from_team_by_id("5c08c298c779cea69e1bd01f", "Clippers")

@@ -1,5 +1,5 @@
 from __future__ import print_function
-from flask import Flask, render_template, url_for, flash, redirect, session
+from flask import Flask, render_template, url_for, flash, redirect, session, request
 from flask_pymongo import PyMongo
 from team_registration import TeamRegistration
 from team_roster import TeamRoster, RosterManagementForm
@@ -92,22 +92,32 @@ def gm_home():
 
 @app.route("/roster_management", methods=["GET", "POST"])
 def roster_management():
-    team = Team()
-    team_data = team.get_team_data_by_gm_email(session["gm_email"])
-    roster_form = RosterManagementForm()
 
     if "gm_email" in session:
-        app.logger.debug("NAME: %s" % roster_form.last_name.data)
+        team = Team()
+        team_data = team.get_team_data_by_gm_email(session["gm_email"])
+        roster_form = RosterManagementForm()
         if roster_form.validate_on_submit():
-            team.add_player(roster_form.first_name.data, roster_form.last_name.data)
-            for t in team_data:
-                team.assign_player_to_team(roster_form.first_name.data, roster_form.last_name.data, t["team_name"])
-            app.logger.debug("ADDED!")
+            if roster_form.add_button.data:
+                team.add_player(roster_form.first_name.data, roster_form.last_name.data)
+                for t in team_data:
+                    team.assign_player_to_team(roster_form.first_name.data, roster_form.last_name.data, t["team_name"])
+                app.logger.debug("ADDED!")
+            elif roster_form.remove_button.data:
+                pass
             return redirect(url_for('roster_management'))
         else:
             app.logger.debug("NOT ADDED: name: %s" % roster_form.first_name)
             return render_template("gm/roster_management.html", team_data=team_data, form=roster_form)
 
+
+@app.route("/remove_player", methods=["POST"])
+def remove_player():
+    app.logger.debug("IS IT HITTING THIS??")
+    if request.method == "POST":
+        id = request.json['data']
+        app.logger.debug("BOOOOO")
+    return render_template("gm/roster_management.html")
 
 
 @app.route("/logout")

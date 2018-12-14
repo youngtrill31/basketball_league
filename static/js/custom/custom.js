@@ -14,19 +14,28 @@
 });
 
 
+(function(){
+  function ontop() {
+    $("#playerRow").toggleClass("hiddenRowDisplay");
+  }
+  $(function(){
+    $("#addRow").click(ontop);
+  });
+})();
 
 
-$(document).ready(function() {
-    $("#addRow").click(function(){
-        $("#playerRow").toggleClass("hiddenRow hiddenRowDisplay")
-    });
+/* Handle removing player from team roster
+------------------------------------------------ */
+$(document).ready(function(){
+var clicked;
+$("#remove-player").click(function() {
+    clicked = $(this).attr("data-id");
+$.ajax({
+    type : 'POST',
+    dataType: 'json',
+    url : '/remove_player',
+    contentType: 'application/json;charset=UTF-8',
+    data : JSON.stringify({'data': clicked})
 });
-
-//(function(){
-//  function ontop() {
-//    $("#playerRow").toggleClass("hiddenRowDisplay");
-//  }
-//  $(function(){
-//    $("#addRow").click(ontop);
-//  });
-//})();
+ });
+});
