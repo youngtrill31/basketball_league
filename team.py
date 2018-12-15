@@ -5,8 +5,8 @@ import bcrypt
 
 app = Flask(__name__)
 
-app.config['MONGO_URI'] = 'mongodb://jdeleon:gamebang08@ds123434.mlab.com:23434/jdleague'
-# app.config['MONGO_URI'] = 'mongodb://localhost:27017/jdleague'
+# app.config['MONGO_URI'] = 'mongodb://jdeleon:gamebang08@ds123434.mlab.com:23434/jdleague'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/jdleague'
 
 mongo = PyMongo(app)
 
@@ -86,10 +86,10 @@ class Team(object):
             {   "$push": {  "players": player}})
 
 
-    def remove_player_from_team_by_id(self, _id, team_name):
+    def remove_player_from_team_by_ids(self, _id, team_id):
         teams = mongo.db.teams
         teams.update_one(
-            {   "team_name": team_name},
+            {   "team_id": team_id},
             {   "$pull": {  "players": {
                 "_id": ObjectId(_id)
             }}}
@@ -139,4 +139,4 @@ if __name__ == '__main__':
 
 
 
-    team.remove_player_from_team_by_id("5c08c298c779cea69e1bd01f", "Clippers")
+    team.remove_player_from_team_by_ids("5c143c5904c5d334f84d7926", "sqasquared")

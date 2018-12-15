@@ -96,29 +96,37 @@ def roster_management():
     if "gm_email" in session:
         team = Team()
         team_data = team.get_team_data_by_gm_email(session["gm_email"])
+
+        # Add team_id to session
+        for td in team_data:
+            app.logger.debug("team_id: %s" % td["team_id"])
+            session["team_id"] = td["team_id"]
+
         roster_form = RosterManagementForm()
+
         if roster_form.validate_on_submit():
             if roster_form.add_button.data:
                 team.add_player(roster_form.first_name.data, roster_form.last_name.data)
                 for t in team_data:
                     team.assign_player_to_team(roster_form.first_name.data, roster_form.last_name.data, t["team_name"])
-                app.logger.debug("ADDED!")
-            elif roster_form.remove_button.data:
-                pass
+                app.logger.debug("%s %s is added to the roster." % (roster_form.first_name.data,
+                                 roster_form.last_name.data))
             return redirect(url_for('roster_management'))
         else:
-            app.logger.debug("NOT ADDED: name: %s" % roster_form.first_name)
+            app.logger.debug("NOT ADDED: %s %s" % (roster_form.first_name.data, roster_form.last_name.data))
             return render_template("gm/roster_management.html", team_data=team_data, form=roster_form)
 
 
 @app.route("/remove_player", methods=["POST"])
 def remove_player():
-    app.logger.debug("IS IT HITTING THIS??")
+    app.logger.debug("Remove Player View")
+    team = Team()
     if request.method == "POST":
-        id = request.json['data']
-        app.logger.debug("BOOOOO")
+        _id = request.json['data']
+        team.remove_player_from_team_by_ids(_id, session["team_id"])
+        app.logger.debug("Player with id %s has been removed from %s" % (_id, session["team_id"]))
+        return redirect(url_for('roster_management'))
     return render_template("gm/roster_management.html")
-
 
 @app.route("/logout")
 def logout():
